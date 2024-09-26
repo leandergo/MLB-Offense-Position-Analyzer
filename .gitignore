@@ -8,3 +8,6 @@ __pycache__/
 *.csv
 # Ignore macOS system files
 .DS_Store
+
+# Ignore data txt file
+2023_player_data.txt
