@@ -6,3 +6,5 @@ __pycache__/
 
 # Ignore all .csv files
 *.csv
+# Ignore macOS system files
+.DS_Store
