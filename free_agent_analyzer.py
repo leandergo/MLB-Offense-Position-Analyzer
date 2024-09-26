@@ -1,10 +1,10 @@
-import numpy as np
-import pandas as pd
 import tkinter as tk
 from tkinter import ttk
+from data_cleaning_free_agency import read_and_clean_data
 
 """Load in the dataframe"""
-player_stats = pd.read_csv("~/Desktop/Projects/MLB_2023/modified_stats.csv")
+# player_stats = pd.read_csv("~/Desktop/Projects/MLB_2023/modified_stats.csv")
+player_stats = read_and_clean_data('~/Desktop/Projects/MLB_2023/2023_player_data.csv')
 
 #League average stats !!NOT ROUNDED!!
 league_ba = player_stats['H'].sum() / player_stats['AB'].sum()
@@ -22,7 +22,7 @@ def get_OPS_plus(obp, slg):
 
 #Grouping by position and adding the avg, obp, and slg
 position_grouped = player_stats.groupby(by='Pos Summary').sum()\
-		.drop(columns=["Unnamed: 0", "Name", "Age", "Tm", "Name-additional"])
+		.drop(columns=["Name", "Age", "Tm", "Name-additional"])
 position_grouped['Avg'] = round(position_grouped['H'] / \
 								position_grouped['AB'], 3)
 
@@ -50,7 +50,7 @@ def on_select(event=None):
     selected_team = dropdown.get()
     #Take the selected team and get the ops+ of all the postions
     team_group = player_stats.groupby(by = ['Tm', 'Pos Summary']).sum()\
-    			.drop(columns=["Unnamed: 0", "Name", "Age", "Name-additional"])\
+    			.drop(columns=["Name", "Age", "Name-additional"])\
     			.reset_index()
     team_group.set_index('Tm', inplace = True)
     team_group = team_group.loc[team_group.index == selected_team]
@@ -90,6 +90,7 @@ def on_select(event=None):
     
 
     positions_of_team = position_grouped.loc[team_positions]
+    team_group_OPS = team_group_OPS.copy()
     team_group_OPS["Relative OPS+"] = team_group_OPS['OPS+'] / positions_of_team['OPS+']
 
     team_group_OPS = team_group_OPS.sort_values(by = 'Relative OPS+').reset_index()
@@ -118,17 +119,9 @@ def on_select(event=None):
             positions.append("Designated Hitter")
 
     print("The top 3 positions that need to be filled are:")
-    print(positions)
-    # pos_ops = position_grouped['OPS+'].tolist()
-    # team_group['Pos OPS+'] = team_group['OPS+'] / pos_ops
-    # team_group = team_group.sort_values(by = 'Pos OPS+').reset_index()
-    # team_group.set_index('Pos Summary', inplace = True)
-
-
-    # for index in team_group.index:
-    # 	if position['Pos OPS+']
-    # team_group.to_csv('testing.csv')
-
+    print(positions[0] + ", " + positions[1] + ", and " + positions[2])
+    exit()
+    
 
 
 # Create the main window
